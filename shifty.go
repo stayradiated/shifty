@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"sync"
-	"time"
 
 	"github.com/davecheney/gpio"
 )
@@ -56,7 +55,7 @@ func (s *ShiftRegister) SetBit(index int, state bool) {
 	if state {
 		s.state |= 1 << byte(index)
 	} else {
-		s.state &= 1 ^ (1 << byte(index))
+		s.state &= ^(1 << byte(index))
 	}
 
 	s.shiftOut()
@@ -83,10 +82,7 @@ func (s *ShiftRegister) shiftOut() {
 		}
 
 		s.ClockPin.Set()
-		time.Sleep(20 * time.Millisecond)
 		s.ClockPin.Clear()
-		time.Sleep(20 * time.Millisecond)
-
 	}
 
 	s.LatchPin.Set()
