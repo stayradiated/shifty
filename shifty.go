@@ -50,7 +50,11 @@ func (s *ShiftRegister) SetBit(index int, state bool) {
 	s.Lock()
 	defer s.Unlock()
 
-	s.state |= 1 << byte(index)
+	if state {
+		s.state |= 1 << byte(index)
+	} else {
+		s.state &= 1 ^ (1 << byte(index))
+	}
 	s.shiftOut()
 }
 
