@@ -65,7 +65,7 @@ func (s *ShiftRegister) GetBit(index int) bool {
 	s.Lock()
 	defer s.Unlock()
 
-	return (s.state>>byte(index))&1 == 1
+	return (s.state>>byte(index))&1 > 0
 }
 
 func (s *ShiftRegister) shiftOut() {
@@ -75,7 +75,7 @@ func (s *ShiftRegister) shiftOut() {
 
 	for i := byte(0); i < 8; i++ {
 
-		if (s.state>>i)&1 == 1 {
+		if (s.state>>i)&1 > 0 {
 			s.DataPin.Set()
 		} else {
 			s.DataPin.Clear()
