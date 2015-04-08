@@ -19,6 +19,10 @@ type ShiftRegister struct {
 
 func (s *ShiftRegister) Pin(index int) *Pin {
 
+	if s.pins == nil {
+		s.pins = make([]*Pin, 8)
+	}
+
 	if s.pins[index] != nil {
 		return s.pins[index]
 	}
