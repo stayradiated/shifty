@@ -22,15 +22,16 @@ func main() {
 		ClockPin: pin22,
 	}
 
-	for {
-		leds := byte(0)
-		s.Update(leds)
-		time.Sleep(500 * time.Millisecond)
+	leds := s.AllPins()
 
+	for {
 		for i := uint(0); i < 8; i++ {
-			leds |= 1 << i
-			s.Update(leds)
-			time.Sleep(500 * time.Millisecond)
+			leds[i].Set()
+			time.Sleep(200 * time.Millisecond)
+		}
+		for i := uint(0); i < 8; i++ {
+			leds[i].Clear()
+			time.Sleep(200 * time.Millisecond)
 		}
 	}
 }
