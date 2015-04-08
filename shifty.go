@@ -1,7 +1,10 @@
 package shifty
 
 import (
+	"fmt"
+	"strconv"
 	"sync"
+	"time"
 
 	"github.com/davecheney/gpio"
 )
@@ -55,6 +58,7 @@ func (s *ShiftRegister) SetBit(index int, state bool) {
 	} else {
 		s.state &= 1 ^ (1 << byte(index))
 	}
+
 	s.shiftOut()
 }
 
@@ -66,6 +70,8 @@ func (s *ShiftRegister) GetBit(index int) bool {
 }
 
 func (s *ShiftRegister) shiftOut() {
+	fmt.Println(strconv.FormatInt(int64(s.state), 2))
+
 	s.LatchPin.Clear()
 
 	for i := byte(0); i < 8; i++ {
@@ -77,9 +83,9 @@ func (s *ShiftRegister) shiftOut() {
 		}
 
 		s.ClockPin.Set()
-		// time.Sleep(20 * time.Millisecond)
+		time.Sleep(20 * time.Millisecond)
 		s.ClockPin.Clear()
-		// time.Sleep(20 * time.Millisecond)
+		time.Sleep(20 * time.Millisecond)
 
 	}
 
