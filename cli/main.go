@@ -26,7 +26,7 @@ func main() {
 	leds := s.AllPins()
 
 	for {
-		last := 15
+		last := uint(15)
 		for i := uint(0); i < 16; i++ {
 			leds[i].Set()
 			leds[last].Clear()
