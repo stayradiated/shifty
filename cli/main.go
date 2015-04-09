@@ -33,6 +33,12 @@ func main() {
 			time.Sleep(100 * time.Millisecond)
 			last = i
 		}
+		for i := last - 1; i >= 0; i-- {
+			leds[i].Set()
+			leds[last].Clear()
+			time.Sleep(100 * time.Millisecond)
+			last = i
+		}
 	}
 }
 
