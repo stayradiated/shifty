@@ -26,13 +26,12 @@ func main() {
 	leds := s.AllPins()
 
 	for {
+		last := 15
 		for i := uint(0); i < 16; i++ {
 			leds[i].Set()
-			time.Sleep(200 * time.Millisecond)
-		}
-		for i := uint(0); i < 16; i++ {
-			leds[i].Clear()
-			time.Sleep(200 * time.Millisecond)
+			leds[last].Clear()
+			time.Sleep(100 * time.Millisecond)
+			last = i
 		}
 	}
 }
