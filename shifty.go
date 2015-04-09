@@ -1,10 +1,6 @@
 package shifty
 
-import (
-	"fmt"
-	"strconv"
-	"sync"
-)
+import "sync"
 
 type Pin interface {
 	Set()
@@ -74,8 +70,6 @@ func (s *ShiftRegister) GetBit(index uint) bool {
 }
 
 func (s *ShiftRegister) shiftOut() {
-	fmt.Println(strconv.FormatInt(int64(s.state), 2))
-
 	s.LatchPin.Clear()
 
 	for i := uint(0); i < s.MaxPins; i++ {

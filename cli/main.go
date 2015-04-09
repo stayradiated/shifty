@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"time"
@@ -30,14 +29,12 @@ func main() {
 
 	for {
 		for i := uint(0); i < 16; i++ {
-			fmt.Println(i, last)
 			leds[i].Set()
 			leds[last].Clear()
 			last = i
 			time.Sleep(100 * time.Millisecond)
 		}
 		for i := last - 1; i > 0 && i < 16; i-- {
-			fmt.Println(i, last)
 			leds[i].Set()
 			leds[last].Clear()
 			last = i
