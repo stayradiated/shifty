@@ -18,13 +18,13 @@ type ShiftRegister struct {
 	LatchPin Pin
 	DataPin  Pin
 	ClockPin Pin
-	MaxPins  int
+	MaxPins  uint
 
-	state byte
+	state uint
 	pins  []Pin
 }
 
-func (s *ShiftRegister) Pin(index int) Pin {
+func (s *ShiftRegister) Pin(index uint) Pin {
 
 	if s.pins == nil {
 		s.pins = make([]Pin, s.MaxPins)
@@ -46,31 +46,31 @@ func (s *ShiftRegister) Pin(index int) Pin {
 
 func (s *ShiftRegister) AllPins() []Pin {
 	// make sure all pins are created
-	for i := 0; i < s.MaxPins; i++ {
+	for i := uint(0); i < s.MaxPins; i++ {
 		s.Pin(i)
 	}
 
 	return s.pins
 }
 
-func (s *ShiftRegister) SetBit(index int, state bool) {
+func (s *ShiftRegister) SetBit(index uint, state bool) {
 	s.Lock()
 	defer s.Unlock()
 
 	if state {
-		s.state |= 1 << byte(index)
+		s.state |= 1 << index
 	} else {
-		s.state &= ^(1 << byte(index))
+		s.state &= ^(1 << index)
 	}
 
 	s.shiftOut()
 }
 
-func (s *ShiftRegister) GetBit(index int) bool {
+func (s *ShiftRegister) GetBit(index uint) bool {
 	s.Lock()
 	defer s.Unlock()
 
-	return (s.state>>byte(index))&1 > 0
+	return (s.state>>index)&1 > 0
 }
 
 func (s *ShiftRegister) shiftOut() {
@@ -78,7 +78,7 @@ func (s *ShiftRegister) shiftOut() {
 
 	s.LatchPin.Clear()
 
-	for i := byte(0); i < byte(s.MaxPins); i++ {
+	for i := uint(0); i < s.MaxPins; i++ {
 
 		if (s.state>>i)&1 > 0 {
 			s.DataPin.Set()
@@ -94,7 +94,7 @@ func (s *ShiftRegister) shiftOut() {
 }
 
 type ShiftRegisterPin struct {
-	Index    int
+	Index    uint
 	register *ShiftRegister
 }
 
