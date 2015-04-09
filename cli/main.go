@@ -20,16 +20,17 @@ func main() {
 		DataPin:  pin17,
 		LatchPin: pin27,
 		ClockPin: pin22,
+		MaxPins:  16,
 	}
 
 	leds := s.AllPins()
 
 	for {
-		for i := uint(0); i < 8; i++ {
+		for i := uint(0); i < 16; i++ {
 			leds[i].Set()
 			time.Sleep(200 * time.Millisecond)
 		}
-		for i := uint(0); i < 8; i++ {
+		for i := uint(0); i < 16; i++ {
 			leds[i].Clear()
 			time.Sleep(200 * time.Millisecond)
 		}

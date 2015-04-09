@@ -4,32 +4,37 @@ import (
 	"fmt"
 	"strconv"
 	"sync"
-
-	"github.com/davecheney/gpio"
 )
+
+type Pin interface {
+	Set()
+	Clear()
+	Get() bool
+}
 
 type ShiftRegister struct {
 	sync.Mutex
 
-	LatchPin gpio.Pin
-	DataPin  gpio.Pin
-	ClockPin gpio.Pin
+	LatchPin Pin
+	DataPin  Pin
+	ClockPin Pin
+	MaxPins  int
 
 	state byte
-	pins  []*Pin
+	pins  []Pin
 }
 
-func (s *ShiftRegister) Pin(index int) *Pin {
+func (s *ShiftRegister) Pin(index int) Pin {
 
 	if s.pins == nil {
-		s.pins = make([]*Pin, 8)
+		s.pins = make([]Pin, s.MaxPins)
 	}
 
 	if s.pins[index] != nil {
 		return s.pins[index]
 	}
 
-	pin := &Pin{
+	pin := &ShiftRegisterPin{
 		Index:    index,
 		register: s,
 	}
@@ -39,9 +44,9 @@ func (s *ShiftRegister) Pin(index int) *Pin {
 	return pin
 }
 
-func (s *ShiftRegister) AllPins() []*Pin {
+func (s *ShiftRegister) AllPins() []Pin {
 	// make sure all pins are created
-	for i := 0; i < 8; i++ {
+	for i := 0; i < s.MaxPins; i++ {
 		s.Pin(i)
 	}
 
@@ -73,7 +78,7 @@ func (s *ShiftRegister) shiftOut() {
 
 	s.LatchPin.Clear()
 
-	for i := byte(0); i < 8; i++ {
+	for i := byte(0); i < byte(s.MaxPins); i++ {
 
 		if (s.state>>i)&1 > 0 {
 			s.DataPin.Set()
@@ -88,19 +93,19 @@ func (s *ShiftRegister) shiftOut() {
 	s.LatchPin.Set()
 }
 
-type Pin struct {
+type ShiftRegisterPin struct {
 	Index    int
 	register *ShiftRegister
 }
 
-func (p *Pin) Set() {
+func (p *ShiftRegisterPin) Set() {
 	p.register.SetBit(p.Index, true)
 }
 
-func (p *Pin) Clear() {
+func (p *ShiftRegisterPin) Clear() {
 	p.register.SetBit(p.Index, false)
 }
 
-func (p *Pin) Get() bool {
+func (p *ShiftRegisterPin) Get() bool {
 	return p.register.GetBit(p.Index)
 }
