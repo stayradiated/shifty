@@ -36,7 +36,7 @@ func main() {
 			last = i
 			time.Sleep(100 * time.Millisecond)
 		}
-		for i := last - 1; i >= 0 && i < 16; i-- {
+		for i := last - 1; i > 0 && i < 16; i-- {
 			fmt.Println(i, last)
 			leds[i].Set()
 			leds[last].Clear()
